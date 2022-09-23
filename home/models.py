@@ -4,7 +4,7 @@ from django.db import models
 STATUS = (('active','Active'),('default','Default'))
 class Category(models.Model):
     name = models.CharField(max_length=300)
-    slug = models.CharField(max_length=400)
+    slug = models.CharField(max_length=400,unique = True)
     logo = models.CharField(blank=True,max_length=50)
 
     def __str__(self):
@@ -12,7 +12,7 @@ class Category(models.Model):
 
 class SubCategory(models.Model):
     name = models.CharField(max_length=300)
-    slug = models.CharField(max_length=400)
+    slug = models.CharField(max_length=400,unique = True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE)
 
     def __str__(self):
@@ -41,7 +41,7 @@ class Ad(models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=300)
     image = models.ImageField(upload_to='media')
-    slug = models.CharField(max_length=400)
+    slug = models.CharField(max_length=400,unique = True)
     rank = models.IntegerField()
     def __str__(self):
         return self.name
@@ -49,6 +49,7 @@ STOCK = (('In stock','In stock'),('out of stock','out of stock'))
 LABELS = (('new','new'),('hot','hot'),('sale','sale'),('','default'))
 class Product(models.Model):
     name = models.CharField(max_length= 400)
+    slug = models.CharField(max_length=500,unique = True)
     price = models.IntegerField()
     discounted_price = models.IntegerField()
     image = models.ImageField(upload_to='media')
