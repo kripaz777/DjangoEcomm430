@@ -144,7 +144,7 @@
                         {% endfor %}
 
                          {% for ad in ads %}
-                        {% if ad.rank == %5}
+                        {% if ad.rank == 5 %}
                         <div class="category-item ch-150">
                             <img src="{{ad.image.url}}" />
                             <a class="category-name" href="">
@@ -163,8 +163,9 @@
                                 <p>Some text goes here that describes the image</p>
                             </a>
                         </div>
-                        {% endfor %}
                         {% endif %}
+                        {% endfor %}
+
                          {% for ad in ads %}
                         {% if ad.rank == 7 %}
                         <div class="category-item ch-250">
