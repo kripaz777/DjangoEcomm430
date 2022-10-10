@@ -62,7 +62,7 @@
                                     </div>
                                 </div>
                             </div>
-                            {% for cat in catproducts %}
+                            {% for cat in brandroducts %}
                             <div class="col-md-4">
                                 <div class="product-item">
                                     <div class="product-title">
@@ -174,7 +174,7 @@
                         <div class="sidebar-widget brands">
                             <h2 class="title">Our Brands</h2>
                             <ul>
-                                {% for b in brands %}
+                               {% for b in brands %}
                                 <li><a href="/brand/{{b.slug}}">{{b.name}} </a><span></span></li>
                                 {% endfor %}
                             </ul>
