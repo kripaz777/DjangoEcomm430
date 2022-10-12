@@ -62,3 +62,13 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+class Review(models.Model):
+    name = models.CharField(max_length= 400)
+    email = models.EmailField(max_length=100)
+    review = models.TextField(blank = True)
+    star = models.IntegerField(null = True)
+    slug = models.CharField(max_length=500)
+
+    def __str__(self):
+        return self.name

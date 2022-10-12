@@ -31,9 +31,15 @@ class BrandView(BaseView):
     def get(self,request,slug):
         self.my_view
         ids = Brand.objects.get(slug = slug).id
-        self.my_view['brandroducts'] = Product.objects.filter(brand_id = ids)
+        self.my_view['brandproducts'] = Product.objects.filter(brand_id = ids)
         return render(request, 'brand.html', self.my_view)
 
+class ProductDetailView(BaseView):
+    def get(self,request,slug):
+        self.my_view
+        self.my_view['products'] = Product.objects.filter(slug = slug)
+        self.my_view['reviews'] = Review.objects.filter(slug=slug)
+        return render(request,'product-detail.html',self.my_view)
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -60,3 +66,21 @@ def signup(request):
             return redirect('/signup')
 
     return render(request,'signup.html')
+
+def reviews(request):
+    if request.method == 'POST':
+        review = request.POST['review']
+        star = request.POST['star']
+        slug = request.POST['slug']
+        username = request.user.username
+        email = request.user.email
+        data = Review.objects.create(
+            name = username,
+            email = email,
+            review = review,
+            star = star,
+            slug = slug
+        )
+        data.save()
+    return redirect(f'/details/{slug}')
+
