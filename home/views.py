@@ -40,6 +40,18 @@ class ProductDetailView(BaseView):
         self.my_view['products'] = Product.objects.filter(slug = slug)
         self.my_view['reviews'] = Review.objects.filter(slug=slug)
         return render(request,'product-detail.html',self.my_view)
+
+class SearchView(BaseView):
+    def get(self,request):
+        self.my_view
+        query = request.GET.get('query')
+        print(query)
+        if query != "":
+            self.my_view['search_product'] = Product.objects.filter(description__icontains = query)
+        else:
+            return redirect('/')
+        return render(request,'product-list.html',self.my_view)
+
 def signup(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -83,4 +95,5 @@ def reviews(request):
         )
         data.save()
     return redirect(f'/details/{slug}')
+
 
