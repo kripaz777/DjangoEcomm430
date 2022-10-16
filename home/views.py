@@ -96,4 +96,58 @@ def reviews(request):
         data.save()
     return redirect(f'/details/{slug}')
 
+def add_cart(slug,user):
+    price = Product.objects.get(slug=slug).price
+    discounted_price = Product.objects.get(slug=slug).discounted_price
+    quantity = Cart.objects.get(slug=slug,username = user).quantity
+    if discounted_price > 0:
+        original_price = discounted_price
+    else:
+        original_price = price
+    return original_price,quantity
+def cart(request,slug):
+    user = request.user.username
+    if Product.objects.filter(slug = slug).exists():
+        if Cart.objects.filter(slug = slug,username = user).exists():
+            original_price, quantity = add_cart(slug,user)
+            quantity = quantity+1
+            total =  original_price*quantity
+            Cart.objects.filter(slug = slug,username = user).update(total = total,quantity = quantity)
+            return redirect('/')
+        else:
+            original_price, quantity = add_cart(slug, user)
+            data = Cart.objects.create(
+                username = user,
+                slug = slug,
+                total = original_price,
+                items = Product.objects.filter(slug = slug)[0]
+            )
+            data.save()
+            return redirect('/')
+    else:
+        return redirect('/')
 
+def delete_cart(request,slug):
+    if Cart.objects.filter(slug = slug,username = request.user.username).exists():
+        Cart.objects.filter(slug = slug,username = request.user.username).delete()
+    else:
+        return redirect('/')
+
+def remove_single_cart(request,slug):
+    if Cart.objects.filter(slug=slug, username=request.user.username).exists():
+        original_price, quantity = add_cart(slug, request.user.username)
+        if quantity > 1:
+            quantity = quantity - 1
+            total = original_price * quantity
+            Cart.objects.filter(slug=slug, username=request.user.username).update(total=total, quantity=quantity)
+            return redirect('/')
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
+
+class CartView(BaseView):
+    def get(self,request):
+        self.my_view
+        self.my_view['my_carts'] = Cart.objects.filter(username = request.user.username,checkout = False)
+        return render(request,'cart.html',self.my_view)

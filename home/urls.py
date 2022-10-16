@@ -9,4 +9,8 @@ urlpatterns = [
     path('signup', signup, name='signup'),
     path('review', reviews, name='review'),
     path('search',SearchView.as_view(),name = 'search'),
+    path('cart',cart,name = 'cart'),
+    path('delete_cart',delete_cart,name = 'delete_cart'),
+    path('remove_single_cart', remove_single_cart, name='remove_single_cart'),
+    path('my_cart', CartView.as_view(), name='my_cart'),
 ]
