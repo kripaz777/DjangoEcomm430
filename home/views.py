@@ -99,7 +99,10 @@ def reviews(request):
 def add_cart(slug,user):
     price = Product.objects.get(slug=slug).price
     discounted_price = Product.objects.get(slug=slug).discounted_price
-    quantity = Cart.objects.get(slug=slug,username = user).quantity
+    if Cart.objects.filter(slug=slug,username = user).exists():
+        quantity = Cart.objects.get(slug=slug,username = user).quantity
+    else:
+        quantity = 1
     if discounted_price > 0:
         original_price = discounted_price
     else:
@@ -113,7 +116,7 @@ def cart(request,slug):
             quantity = quantity+1
             total =  original_price*quantity
             Cart.objects.filter(slug = slug,username = user).update(total = total,quantity = quantity)
-            return redirect('/')
+            return redirect('/my_cart')
         else:
             original_price, quantity = add_cart(slug, user)
             data = Cart.objects.create(
@@ -123,13 +126,14 @@ def cart(request,slug):
                 items = Product.objects.filter(slug = slug)[0]
             )
             data.save()
-            return redirect('/')
+            return redirect('/my_cart')
     else:
         return redirect('/')
 
 def delete_cart(request,slug):
     if Cart.objects.filter(slug = slug,username = request.user.username).exists():
         Cart.objects.filter(slug = slug,username = request.user.username).delete()
+        return redirect('/my_cart')
     else:
         return redirect('/')
 
