@@ -9,6 +9,9 @@ class BaseView(View):
     my_view['categories'] = Category.objects.all()
     my_view['brands'] = Brand.objects.all()
     my_view['sales'] = Product.objects.filter(labels='sale')
+    my_view['no_counts'] = NoCart.objects.all()
+
+
 
 class HomeView(BaseView):
     def get(self,request):
@@ -110,6 +113,7 @@ def add_cart(slug,user):
     return original_price,quantity
 def cart(request,slug):
     user = request.user.username
+    count = 0
     if Product.objects.filter(slug = slug).exists():
         if Cart.objects.filter(slug = slug,username = user).exists():
             original_price, quantity = add_cart(slug,user)
@@ -126,6 +130,11 @@ def cart(request,slug):
                 items = Product.objects.filter(slug = slug)[0]
             )
             data.save()
+            if NoCart.objects.filter(user = request.user.username).exists():
+                count = count+1
+                NoCart.objects.filter(user = request.user.username).update(count = count)
+            else:
+                NoCart.objects.create(user = request.user.username, count = 1)
             return redirect('/my_cart')
     else:
         return redirect('/')
@@ -144,14 +153,20 @@ def remove_single_cart(request,slug):
             quantity = quantity - 1
             total = original_price * quantity
             Cart.objects.filter(slug=slug, username=request.user.username).update(total=total, quantity=quantity)
-            return redirect('/')
+            return redirect('/my_cart')
         else:
-            return redirect('/')
+            return redirect('/my_cart')
     else:
-        return redirect('/')
+        return redirect('/my_cart')
 
 class CartView(BaseView):
     def get(self,request):
         self.my_view
+        total = 0
         self.my_view['my_carts'] = Cart.objects.filter(username = request.user.username,checkout = False)
+        for i in Cart.objects.filter(username = request.user.username,checkout = False):
+            total = total + i.total
+        self.my_view['all_total'] = total
+        self.my_view['shipping'] = 20
+        self.my_view['grand_total'] = self.my_view['all_total']+ self.my_view['shipping']
         return render(request,'cart.html',self.my_view)

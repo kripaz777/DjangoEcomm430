@@ -47,9 +47,9 @@
                                             </td>
                                             <td>
                                                 <div class="qty">
-                                                    <button class="btn-minus"><i class="fa fa-minus"></i></button>
+                                                    <a href = "/remove_single_cart/{{cart.slug}}"><button class="btn-minus"><i class="fa fa-minus"></i></button></a>
                                                     <input type="text" value="{{cart.quantity}}">
-                                                    <button class="btn-plus"><i class="fa fa-plus"></i></button>
+                                                    <a href = "/cart/{{cart.slug}}"><button  class="btn-plus"><i class="fa fa-plus"></i></button></a>
                                                 </div>
                                             </td>
                                             <td>${{cart.total}}</td>
@@ -61,6 +61,7 @@
                             </div>
                         </div>
                     </div>
+                    {% if all_total != 0 %}
                     <div class="col-lg-4">
                         <div class="cart-page-inner">
                             <div class="row">
@@ -74,9 +75,9 @@
                                     <div class="cart-summary">
                                         <div class="cart-content">
                                             <h1>Cart Summary</h1>
-                                            <p>Sub Total<span>$99</span></p>
-                                            <p>Shipping Cost<span>$1</span></p>
-                                            <h2>Grand Total<span>$100</span></h2>
+                                            <p>Sub Total<span>${{all_total}}</span></p>
+                                            <p>Shipping Cost<span>${{shipping}}</span></p>
+                                            <h2>Grand Total<span>${{grand_total}}</span></h2>
                                         </div>
                                         <div class="cart-btn">
                                             <button>Update Cart</button>
@@ -87,6 +88,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

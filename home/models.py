@@ -83,7 +83,7 @@ class Cart(models.Model):
     checkout = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.username
+        return str(self.total)
 
 class Wishlist(models.Model):
     username = models.CharField(max_length=300)
@@ -100,3 +100,10 @@ class Contact(models.Model):
     message = models.TextField()
     def __str__(self):
         return self.name
+
+class NoCart(models.Model):
+    user = models.CharField(max_length= 200)
+    count = models.IntegerField()
+
+    def __str__(self):
+        return self.user
