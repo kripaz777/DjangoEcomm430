@@ -170,3 +170,29 @@ class CartView(BaseView):
         self.my_view['shipping'] = 20
         self.my_view['grand_total'] = self.my_view['all_total']+ self.my_view['shipping']
         return render(request,'cart.html',self.my_view)
+
+
+# ------------------------------------------------------------API--------------------------------------------
+# ViewSets define the view behavior.
+from .models import *
+from .serializers import *
+from rest_framework import viewsets
+import django_filters.rest_framework
+from rest_framework import generics
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+
+class ProductListView(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter,filters.OrderingFilter]
+    filterset_fields = ['category','subcategory','brand','stock','labels']
+    search_fields = ['name','description','specification']
+    ordering_fields = ['price','id','name']
+
+
